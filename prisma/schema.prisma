@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id         String  @id @default(uuid())
+  nome       String  @db.VarChar(50)
+  idade      Int
+  email      String  @unique @db.VarChar(50)
+  senha      String  @db.VarChar(50)
+  linkGitHub String? @db.VarChar(244)
+
+  dtHrCriacao     DateTime @default(now()) @map("dt_hr_criacao")
+  dtHrAtualizacao DateTime @updatedAt @map("dt_hr_atualizacao")
+
+  @@map("usuario")
+}
+
+model Produto {
+  id                String   @id @default(uuid()) @db.Uuid
+  descricao         String   @db.VarChar(300)
+  preco             Int
+  quantidadeEstoque Int      @map("quantidade_estoque")
+  tipoProduto       String   @map("tipo_produto") @db.VarChar(10)
+  dtCriacao         DateTime @default(now()) @map("data_criacao")
+  disponivel        Boolean?
+
+  @@map("produtos")
+}
+
+model Loja {
+  cnpj      String   @id @db.VarChar(50)
+  nome      String   @db.VarChar(50)
+  segmento  String?  @default("alimentacao") @db.VarChar(30)
+  endereco  String   @db.VarChar(50)
+  telefone  String?  @db.VarChar(11)
+  qtFiliais Int      @map("qt_filiais")
+  dthr      DateTime @default(now()) @map("data_hora")
+}
+
+model Fornecedor {
+  id              Int      @id @default(autoincrement())
+  nome            String   @db.VarChar(255)
+  email           String   @unique @db.VarChar(255)
+  avaliacao       Decimal
+  dtHrCriacao     DateTime @default(now()) @map("dt_hr_criacao")
+  dtHrAtualizacao DateTime @updatedAt @map("dt_hr_atualizacao")
+}
